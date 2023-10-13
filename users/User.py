@@ -79,7 +79,7 @@ class User:
     def email(self, email: str):
         # use regex to validate email
         if "@" not in email:
-            raise ValueError("email must include an @ symbole")
+            raise ValueError("email must include an @ symbol")
         else:
             self.__email = email
 
@@ -101,14 +101,24 @@ class User:
         self._user_posts.append({"post_id": User.post_id, "text": post})
         User.all_user_posts[User.post_id] = post
 
-    def delete_post(self, post_id):
+    def delete_post(self):
+        self.view_posts()
+        post_id = input("Enter Id of post to delete: ")
+        try:
+            post_id = int(post_id)
+        except:
+            raise ValueError("You need to enter an integer")
+        post_to_delete = None
         for post in self._user_posts:
             if post["post_id"] == post_id:
-                self._user_posts.remove(post)
+                post_to_delete = post
+        if post_to_delete != None:
+            self._user_posts.remove(post_to_delete)
         for key in User.all_user_posts.keys():
             if key == post_id:
-                del User.all_user_posts[key]
+                post_to_delete_dict = key
+        del User.all_user_posts[post_to_delete_dict]
 
     def view_posts(self):
         for post in self._user_posts:
-            print(post)
+            print(f"{post['post_id']}: {post['text']}")
